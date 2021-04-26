@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { NewDice} from "./Dice";
+	import {NewConstant, NewDice} from "./Dice";
 	import Chart from 'svelte-frappe-charts';
 
 	let inputRoll = "6";
 
-	$: dice = NewDice(parseInt(inputRoll));
+	$: dice = NewDice(parseInt(inputRoll)).addDice(NewDice(4));
 </script>
 
 <div class="counter">

@@ -11,7 +11,7 @@ export class Dice {
             labels: labels,
             datasets: [
                 {
-                    values: this.slots
+                    values: this.slots.map(x=>x*100)
                 }
             ]
         }
