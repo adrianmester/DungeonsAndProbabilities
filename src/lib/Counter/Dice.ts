@@ -16,35 +16,64 @@ export class Dice {
             ]
         }
     }
+}
 
-    addDice(d2: Dice): Dice {
-        let result = new Dice();
-        result.start = this.start + d2.start;
+export function disadvantage(d: Dice): Dice {
+    return advdis(d, false)
+}
 
-        // if one of the dice is a constant, just return the other's
-        // slots but this the start value summed up
-        if (d2.slots.length==1) {
-            result.slots = this.slots;
-            return result
-        }
-        if (this.slots.length==1) {
-            result.slots = d2.slots;
-            return result
-        }
-        result.slots = [];
-        // initialize slots
-        for (let i=0;i<(this.slots.length+d2.slots.length);i++) {
-            result.slots[i] = 0
-        }
+export function advantage(d: Dice): Dice {
+    return advdis(d, true)
+}
 
-        for (let i=0;i<this.slots.length;i++) {
-            for (let j=0;j<d2.slots.length;j++) {
-                result.slots[i+j] += (this.slots[i]*d2.slots[j])
-            }
-        }
-
-        return result;
+function advdis(d: Dice, advantage: boolean): Dice {
+    let fnc = advantage ? Math.max : Math.min;
+    let result = new Dice()
+    result.start=d.start
+    result.slots = [];
+    // initialize slots
+    for (let i=0;i<d.slots.length;i++) {
+        result.slots[i] = 0
     }
+
+    const value = 1/(d.slots.length*d.slots.length);
+
+    for (let i=0;i<d.slots.length;i++) {
+        for (let j=0;j<d.slots.length;j++) {
+            result.slots[fnc(i, j)] += value;
+        }
+    }
+
+    return result;
+}
+
+export function addDice(d1: Dice, d2: Dice): Dice {
+    let result = new Dice();
+    result.start = d1.start + d2.start;
+
+    // if one of the dice is a constant, just return the other's
+    // slots but this the start value summed up
+    if (d2.slots.length==1) {
+        result.slots = d1.slots;
+        return result
+    }
+    if (d1.slots.length==1) {
+        result.slots = d2.slots;
+        return result
+    }
+    result.slots = [];
+    // initialize slots
+    for (let i=0;i<(d1.slots.length+d2.slots.length);i++) {
+        result.slots[i] = 0
+    }
+
+    for (let i=0;i<d1.slots.length;i++) {
+        for (let j=0;j<d2.slots.length;j++) {
+            result.slots[i+j] += (d1.slots[i]*d2.slots[j])
+        }
+    }
+
+    return result;
 }
 
 export function NewDice(n: number): Dice {
