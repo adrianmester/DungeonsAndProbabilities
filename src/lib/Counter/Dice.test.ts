@@ -135,6 +135,7 @@ test('parse single dice', () => {
 })
 
 test('parse dice input string', () => {
+    expect(parseDiceInputString("d20").dice).toStrictEqual(NewDice(20))
     expect(parseDiceInputString("1d20").dice).toStrictEqual(NewDice(20))
     expect(parseDiceInputString("1d20+").dice).toStrictEqual(NewDice(20))
     expect(parseDiceInputString("1d20-").dice).toStrictEqual(NewDice(20))

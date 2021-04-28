@@ -111,7 +111,7 @@ export function NewConstant(value: number, negative?: boolean): Dice {
     return d;
 }
 
-let diceRegex = /^(-?)(\d+?)d(\d+)([ad]?)$/
+let diceRegex = /^(-?)(\d*)d(\d+)([ad]?)$/
 let numberRegex = /^-?\d+$/
 
 export function parseSingleDice(input: string): Dice {
