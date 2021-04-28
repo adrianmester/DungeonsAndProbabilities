@@ -147,3 +147,18 @@ test('parse dice input string', () => {
     )
     expect(parseDiceInputString("2d6").dice).toStrictEqual(addDice(NewDice(6), NewDice(6)))
 })
+
+test('target chance', () => {
+    const d = NewDice(20);
+    expect(d.targetChance(-1)).toBe(1)
+    expect(d.targetChance(1)).toBeCloseTo(1, 5)
+    expect(d.targetChance(11)).toBeCloseTo(0.5, 5)
+    expect(d.targetChance(20)).toBeCloseTo(0.05, 5)
+    expect(d.targetChance(21)).toBe(0)
+
+    const d2 = addDice(NewDice(4), NewConstant(4))
+    expect(d2.targetChance(5)).toBeCloseTo(1, 5)
+    expect(d2.targetChance(8)).toBeCloseTo(0.25, 5)
+    expect(d2.targetChance(9)).toBe(0)
+
+})

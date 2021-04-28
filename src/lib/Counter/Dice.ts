@@ -3,19 +3,43 @@ export class Dice {
     slots: number[];
     negative: boolean;
 
-    chartData() {
+    chartData(target: number) {
         let labels: string[] = [];
         for (let i = 0; i < this.slots.length; i++) {
             labels[i] = (i + this.start).toString();
         }
+        let slotsA = []
+        let slotsB = []
+        for (let i=0;i<this.slots.length;i++) {
+            if ((i+this.start) < target) {
+                slotsA.push(this.slots[i])
+                slotsB.push(null)
+            } else {
+                slotsA.push(null)
+                slotsB.push(this.slots[i])
+            }
+        }
         return {
             labels: labels,
             datasets: [
-                {
-                    values: this.slots.map(x => x * 100)
-                }
+                { values: slotsA.map(x => x * 100) },
+                { values: slotsB.map(x => x * 100) },
             ]
         }
+    }
+
+    targetChance(target: number) {
+        if (target < this.start) {
+            return 1;
+        }
+        if (target > this.start+this.slots.length) {
+            return 0;
+        }
+        let result = 0;
+        for (let i=target-this.start;i<this.slots.length;i++) {
+            result += this.slots[i];
+        }
+        return result;
     }
 }
 
