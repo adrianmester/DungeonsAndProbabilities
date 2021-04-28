@@ -1,4 +1,12 @@
-import {NewConstant, NewDice, addDice, advantage, disadvantage} from "./Dice";
+import {
+    NewConstant,
+    NewDice,
+    addDice,
+    advantage,
+    disadvantage,
+    parseSingleDice,
+    parseDiceInputString
+} from "./Dice";
 
 test('create d6 and d100', () => {
     let d6 = NewDice(6);
@@ -43,6 +51,30 @@ test('add a constant to a dice', () => {
     expect(s.slots.reduce((a, b)=>a+b)).toBeCloseTo(1, 5);
     expect(s.slots[0]).toBeCloseTo(1/6, 5);
     expect(s.slots.length).toBe(6);
+})
+
+test('addition to constant', () => {
+    let c4 = NewConstant(4)
+    let d2 = NewDice(2)
+    let s = addDice(c4, d2)
+
+    expect(s.start).toBe(5)
+    expect(s.slots.length).toBe(2)
+    expect(s.slots.reduce((a, b)=>a+b)).toBeCloseTo(1, 5);
+    expect(s.slots[0]).toBe(0.5)
+    expect(s.slots[1]).toBe(0.5)
+})
+
+test('subtraction from constant', () => {
+    let c4 = NewConstant(4)
+    let d2 = NewDice(2, true)
+    let s = addDice(c4, d2)
+
+    expect(s.start).toBe(2)
+    expect(s.slots.length).toBe(2)
+    expect(s.slots.reduce((a, b)=>a+b)).toBeCloseTo(1, 5);
+    expect(s.slots[0]).toBe(0.5)
+    expect(s.slots[1]).toBe(0.5)
 })
 
 test('advantage d2', () => {
@@ -90,4 +122,27 @@ test('disadvantage d20', () => {
     expect(d20d.slots[18]).toBeCloseTo(0.00749, 2);
     expect(d20d.slots[1]).toBeCloseTo(0.09270, 2);
     expect(d20d.slots[0]).toBeCloseTo(0.09802, 2);
+})
+
+test('parse single dice', () => {
+    expect(parseSingleDice('d20')).toStrictEqual(NewDice(20));
+    expect(parseSingleDice('1d6')).toStrictEqual(NewDice(6));
+    expect(parseSingleDice('2d20')).toStrictEqual(addDice(NewDice(20), NewDice(20)));
+    expect(parseSingleDice('-1d4')).toStrictEqual(NewDice(4, true));
+    expect(parseSingleDice('-d4')).toStrictEqual(NewDice(4, true));
+    expect(parseSingleDice('d20a')).toStrictEqual(advantage(NewDice(20)));
+    expect(parseSingleDice('d20d')).toStrictEqual(disadvantage(NewDice(20)));
+})
+
+test('parse dice input string', () => {
+    expect(parseDiceInputString("1d20").dice).toStrictEqual(NewDice(20))
+    expect(parseDiceInputString("1d20+").dice).toStrictEqual(NewDice(20))
+    expect(parseDiceInputString("1d20-").dice).toStrictEqual(NewDice(20))
+    expect(parseDiceInputString("1d20 + 2d8- 4").dice).toStrictEqual(
+        addDice(
+            addDice(NewDice(20), addDice(NewDice(8), NewDice(8))),
+            NewConstant(4, true),
+        )
+    )
+    expect(parseDiceInputString("2d6").dice).toStrictEqual(addDice(NewDice(6), NewDice(6)))
 })
