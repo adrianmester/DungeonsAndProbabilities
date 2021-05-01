@@ -3,7 +3,8 @@ export class Dice {
     slots: number[];
     negative: boolean;
 
-    chartData(target: number) {
+    chartData(target: number, percentage?: boolean) {
+        percentage = (percentage === true);
         let labels: string[] = [];
         for (let i = 0; i < this.slots.length; i++) {
             labels[i] = (i + this.start).toString();
@@ -19,12 +20,27 @@ export class Dice {
                 slotsB.push(this.slots[i])
             }
         }
+        let datasets = [];
+        if (percentage) {
+            datasets = [{
+                values: [
+                    slotsA.reduce((a,b)=>(a+b)) * 100,
+                    slotsB.reduce((a,b)=>(a+b)) * 100,
+                ]
+            }];
+            labels = [
+                "miss",
+                "hit",
+            ]
+        } else {
+            datasets = [
+                { name: "miss", values: slotsA.map(x => x * 100) },
+                { name: "hit", values: slotsB.map(x => x * 100) },
+            ]
+        }
         return {
             labels: labels,
-            datasets: [
-                { values: slotsA.map(x => x * 100) },
-                { values: slotsB.map(x => x * 100) },
-            ]
+            datasets: datasets,
         }
     }
 
