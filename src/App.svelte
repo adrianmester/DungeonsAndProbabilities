@@ -7,6 +7,10 @@
 
     let chartOptions = {xIsSeries: 1}
     let chartColors = ["red", "green"]
+    let tooltipOptions = {
+        formatTooltipX: d => (d + '').toUpperCase(),
+        formatTooltipY: d => d + ' pts',
+    }
 
     $: parseResult = parseDiceInputString(diceRollInput)
     $: dice = parseResult.dice;
@@ -28,27 +32,51 @@
     </section>
     <div class="container" style="margin-top:60px">
         <div class="field">
-            <label class="label">Dice Roll</label>
-            <div class="control has-icons-left">
-                <input class="input" type="text" bind:value={diceRollInput}>
-                <span class="icon is-small is-left">
-                    <i class="fas fa-check"></i>
-                </span>
+            <label class="label" for="rollInput">Dice Roll</label>
+            <div class="control">
+                <input id="rollInput" class="input" type="text" bind:value={diceRollInput}>
             </div>
         </div>
 
         <div class="field">
-            <label class="label">Target Value</label>
+            <label class="label" for="targetInput">Target Value</label>
             <div class="control">
-                <input class="input" type="number" bind:value={targetRollInput}>
+                <input id="targetInput" class="input" type="number" bind:value={targetRollInput}>
             </div>
-            <p class="help is-success">This username is available</p>
         </div>
+        <p class="help is-danger">
+            {#if error != null}
+                {error}
+            {/if}
+            &nbsp;
+        </p>
     </div>
     <div class="container chartContainer {chartContainerClass}">
-        <Chart data={displayedDice.chartData(parseInt(targetRollInput))} type="bar" axisOptions={chartOptions} colors={chartColors}/>
+        <Chart
+                data={displayedDice.chartData(parseInt(targetRollInput))}
+                type="bar"
+                axisOptions={chartOptions}
+                tooltipOptions={tooltipOptions}
+                colors={chartColors}/>
+    </div>
+    <div class="container chartContainer {chartContainerClass}">
+        <Chart
+                data={displayedDice.chartData(parseInt(targetRollInput), true)}
+                type="percentage"
+                height="150"
+                colors={chartColors}/>
     </div>
 </main>
 
 <style>
+    .container{
+        padding: 0 20px;
+    }
+    .chartContainer {
+        transition-property: filter;
+        transition-duration: 0.5s;
+    }
+    .chartContainer.blurred {
+        filter: blur(10px);
+    }
 </style>
