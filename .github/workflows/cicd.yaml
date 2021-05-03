@@ -16,5 +16,15 @@ jobs:
     if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v2
+      - name: Check changes in stories
+        uses: netlify/actions/diff-includes@master
+        with:
+          args: docs
+
+    steps:
+      - uses: actions/checkout@v2
       - name: Deploy
         run: netlify deploy --prod --dir=./public/
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
