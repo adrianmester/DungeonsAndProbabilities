@@ -8,7 +8,7 @@ jobs:
     - name: Install modules
       run: npm install
     - name: Run tests
-      run: jest
+      run: ./node_modules/.bin/jest
 
   deploy:
     runs-on: ubuntu-latest
