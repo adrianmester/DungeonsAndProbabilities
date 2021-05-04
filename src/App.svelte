@@ -14,7 +14,7 @@
     let examples = [
         ["d20+5", "Normal attack roll + 5"],
         ["d20d", "Attack with disadvantage"],
-        ["d20+1d4", "Attack roll with Bless"],
+        ["d20a+1d4", "Attack roll with advantage and Bless"],
         ["5d20", "Just pretty"],
     ]
 
